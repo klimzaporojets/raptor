@@ -270,7 +270,8 @@ class TreeBuilder:
         """
         chunks = split_text(text, self.tokenizer, self.max_tokens)
 
-        logging.info("Creating Leaf Nodes")
+        logging.info(f"Creating Leaf Nodes, use_multithreading: {use_multithreading}, "
+                     f"size of chunks: {len(chunks)}")
 
         if use_multithreading:
             leaf_nodes = self.multithreaded_create_leaf_nodes(chunks)
