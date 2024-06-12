@@ -31,7 +31,7 @@ class OpenAIEmbeddingModel(BaseEmbeddingModel):
 
 class SBertEmbeddingModel(BaseEmbeddingModel):
     def __init__(self, model_name="sentence-transformers/multi-qa-mpnet-base-cos-v1"):
-        self.model = SentenceTransformer(model_name)
+        self.model = SentenceTransformer(model_name, device='cuda:1')
 
     def create_embedding(self, text):
         return self.model.encode(text)
