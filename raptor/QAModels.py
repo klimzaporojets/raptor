@@ -54,7 +54,7 @@ class LocalPhi3Model(BaseQAModel):
         try:
             messages = [
                 {"role": "user",
-                 "content": f"using the folloing information {context}. Answer the following question in less "
+                 "content": f"using the following information {context}. Answer the following question in less "
                             f"than 5-7 words, if possible: {question}"}]
 
             inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
@@ -68,6 +68,9 @@ class LocalPhi3Model(BaseQAModel):
                                           )
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
+            print('---------------------------')
+            print('\tcontext: ', context, '\n\tquestion: ', question, '\n\tanswer: ', text)
+            print('---------------------------')
             return text
         except Exception as e:
             print(e)

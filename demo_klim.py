@@ -1,5 +1,7 @@
 import os
 
+from raptor.SummarizationModels import Phi3SummarizationModel
+
 # Cinderella story defined in sample.txt
 with open('demo/sample.txt', 'r') as file:
     text = file.read()
@@ -16,7 +18,7 @@ from raptor import LocalPhi3Model
 retrievalAugmentationConfig = RetrievalAugmentationConfig(
     embedding_model=SBertEmbeddingModel(),
     qa_model=LocalPhi3Model(),
-    summarization_model=LocalPhi3Model())
+    summarization_model=Phi3SummarizationModel())
 RA = RetrievalAugmentation(retrievalAugmentationConfig)
 
 # construct the tree
