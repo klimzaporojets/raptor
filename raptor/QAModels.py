@@ -1,21 +1,90 @@
 import logging
 import os
+import traceback
 
 from openai import OpenAI
-
 
 import getpass
 from abc import ABC, abstractmethod
 
 import torch
 from tenacity import retry, stop_after_attempt, wait_random_exponential
-from transformers import T5ForConditionalGeneration, T5Tokenizer
+from transformers import T5ForConditionalGeneration, T5Tokenizer, AutoModelForCausalLM, AutoTokenizer
 
 
 class BaseQAModel(ABC):
     @abstractmethod
     def answer_question(self, context, question):
         pass
+
+
+class LocalPhi3Model(BaseQAModel):
+    def __init__(self, model='microsoft/Phi-3-mini-4k-instruct',
+                 tokenizer="microsoft/Phi-3-mini-4k-instruct"):
+        """
+        Initializes the GPT-3 model with the specified model version.
+
+        Args:
+            model (str, optional): The GPT-3 model version to use for generating summaries. Defaults to "text-davinci-003".
+        """
+        self.model = model
+        device_map = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+        self.client = AutoModelForCausalLM.from_pretrained(model,
+                                                           device_map=device_map,
+                                                           torch_dtype='auto',
+                                                           trust_remote_code=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
+
+        # self.client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+
+    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
+    def answer_question(self, context, question, max_tokens=150, stop_sequence=None):
+        """
+        Generates a summary of the given context using the GPT-3 model.
+
+        Args:
+            context (str): The text to summarize.
+            max_tokens (int, optional): The maximum number of tokens in the generated summary. Defaults to 150.
+            stop_sequence (str, optional): The sequence at which to stop summarization. Defaults to None.
+
+        Returns:
+            str: The generated summary.
+        """
+        try:
+            messages = [
+                {"role": "user",
+                 "content": f"using the folloing information {context}. Answer the following question in less "
+                            f"than 5-7 words, if possible: {question}"}]
+
+            inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
+
+            # TODO: implement stopping_criteria
+            outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
+                                          temperature=0,
+                                          top_p=1,
+                                          repetition_penalty=1.0,
+                                          diversity_penalty=0.0,
+                                          )
+            #
+            # response = self.client.completions.create(
+            #     prompt=f"using the folloing information {context}. Answer the following question in less than 5-7 words, if possible: {question}",
+            #     temperature=0,
+            #     max_tokens=max_tokens,
+            #     top_p=1,
+            #     frequency_penalty=0,
+            #     presence_penalty=0,
+            #     stop=stop_sequence,
+            #     model=self.model,
+            # )
+            # return response.choices[0].text.strip()
+            #
+            text = self.tokenizer.batch_decode(outputs)[0].strip()
+            return text
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            return ""
 
 
 class GPT3QAModel(BaseQAModel):
@@ -73,7 +142,7 @@ class GPT3TurboQAModel(BaseQAModel):
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
     def _attempt_answer_question(
-        self, context, question, max_tokens=150, stop_sequence=None
+            self, context, question, max_tokens=150, stop_sequence=None
     ):
         """
         Generates a summary of the given context using the GPT-3 model.
@@ -125,7 +194,7 @@ class GPT4QAModel(BaseQAModel):
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
     def _attempt_answer_question(
-        self, context, question, max_tokens=150, stop_sequence=None
+            self, context, question, max_tokens=150, stop_sequence=None
     ):
         """
         Generates a summary of the given context using the GPT-3 model.

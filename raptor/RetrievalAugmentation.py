@@ -129,6 +129,7 @@ class RetrievalAugmentationConfig:
         # Assign the created configurations to the instance
         self.tree_builder_config = tree_builder_config
         self.tree_retriever_config = tree_retriever_config
+        print('kzaporoj: qa_model is: ', qa_model)
         self.qa_model = qa_model or GPT3TurboQAModel()
         self.tree_builder_type = tree_builder_type
 

@@ -4,7 +4,7 @@ from .EmbeddingModels import (BaseEmbeddingModel, OpenAIEmbeddingModel,
                               SBertEmbeddingModel)
 from .FaissRetriever import FaissRetriever, FaissRetrieverConfig
 from .QAModels import (BaseQAModel, GPT3QAModel, GPT3TurboQAModel, GPT4QAModel,
-                       UnifiedQAModel)
+                       UnifiedQAModel, LocalPhi3Model)
 from .RetrievalAugmentation import (RetrievalAugmentation,
                                     RetrievalAugmentationConfig)
 from .Retrievers import BaseRetriever

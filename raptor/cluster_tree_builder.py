@@ -73,6 +73,9 @@ class ClusterTreeBuilder(TreeBuilder):
                 max_tokens=summarization_length,
             )
 
+            # kzaporoj: WE ARE HERE
+            print(f'Node Texts Length: {len(self.tokenizer.encode(node_texts))}')
+            print(f'Summarized Text Length: {len(self.tokenizer.encode(summarized_text))}')
             logging.info(
                 f"Node Texts Length: {len(self.tokenizer.encode(node_texts))}, Summarized Text Length: {len(self.tokenizer.encode(summarized_text))}"
             )
