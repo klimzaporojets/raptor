@@ -112,6 +112,10 @@ class Phi3SummarizationModel(BaseSummarizationModel):
                                           )
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
+            print('------------summary--------------')
+            print('\tcontext: ', context, '\n\tsummary: ', text)
+            print('---------------------------')
+
             return text
         except Exception as e:
             print(e)

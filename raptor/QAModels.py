@@ -68,7 +68,7 @@ class LocalPhi3Model(BaseQAModel):
                                           )
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
-            print('---------------------------')
+            print('------answer question------')
             print('\tcontext: ', context, '\n\tquestion: ', question, '\n\tanswer: ', text)
             print('---------------------------')
             return text
