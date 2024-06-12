@@ -11,10 +11,13 @@ from raptor import RetrievalAugmentationConfig
 from raptor import SBertEmbeddingModel
 from raptor import LocalPhi3Model
 
-p_qa_model = LocalPhi3Model()
-p_embedding_model = SBertEmbeddingModel()
-RA = RetrievalAugmentation(RetrievalAugmentationConfig(embedding_model=p_embedding_model
-                                                       , qa_model=p_qa_model))
+# p_qa_model = LocalPhi3Model()
+# p_embedding_model = SBertEmbeddingModel()
+retrievalAugmentationConfig = RetrievalAugmentationConfig(
+    embedding_model=SBertEmbeddingModel(),
+    qa_model=LocalPhi3Model(),
+    summarization_model=LocalPhi3Model())
+RA = RetrievalAugmentation(retrievalAugmentationConfig)
 
 # construct the tree
 RA.add_documents(text)
