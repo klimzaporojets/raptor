@@ -28,7 +28,7 @@ class LocalPhi3Model(BaseQAModel):
             model (str, optional): The GPT-3 model version to use for generating summaries. Defaults to "text-davinci-003".
         """
         self.model = model
-        device_map = 'cuda' if torch.cuda.is_available() else 'cpu'
+        device_map = 'cuda:2' if torch.cuda.is_available() else 'cpu'
 
         self.client = AutoModelForCausalLM.from_pretrained(model,
                                                            device_map=device_map,

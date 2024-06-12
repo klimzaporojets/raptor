@@ -143,6 +143,7 @@ class ClusterTreeBuilder(TreeBuilder):
             current_level_nodes = new_level_nodes
             all_tree_nodes.update(new_level_nodes)
 
+            logging.info('kzaporoj: ++finished building the tree++')
             tree = Tree(
                 all_tree_nodes,
                 layer_to_nodes[layer + 1],
