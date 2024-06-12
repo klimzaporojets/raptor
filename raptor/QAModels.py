@@ -66,19 +66,7 @@ class LocalPhi3Model(BaseQAModel):
                                           repetition_penalty=1.0,
                                           diversity_penalty=0.0,
                                           )
-            #
-            # response = self.client.completions.create(
-            #     prompt=f"using the folloing information {context}. Answer the following question in less than 5-7 words, if possible: {question}",
-            #     temperature=0,
-            #     max_tokens=max_tokens,
-            #     top_p=1,
-            #     frequency_penalty=0,
-            #     presence_penalty=0,
-            #     stop=stop_sequence,
-            #     model=self.model,
-            # )
-            # return response.choices[0].text.strip()
-            #
+
             text = self.tokenizer.batch_decode(outputs)[0].strip()
             return text
         except Exception as e:
