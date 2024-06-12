@@ -117,6 +117,7 @@ class GPT3QAModel(BaseQAModel):
 
         except Exception as e:
             print(e)
+            traceback.print_exc()
             return ""
 
 
@@ -169,6 +170,7 @@ class GPT3TurboQAModel(BaseQAModel):
             )
         except Exception as e:
             print(e)
+            traceback.print_exc()
             return e
 
 
@@ -221,6 +223,7 @@ class GPT4QAModel(BaseQAModel):
             )
         except Exception as e:
             print(e)
+            traceback.print_exc()
             return e
 
 

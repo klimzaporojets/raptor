@@ -44,6 +44,7 @@ class GPT3TurboSummarizationModel(BaseSummarizationModel):
 
         except Exception as e:
             print(e)
+            traceback.print_exc()
             return e
 
 
@@ -74,6 +75,7 @@ class GPT3SummarizationModel(BaseSummarizationModel):
 
         except Exception as e:
             print(e)
+            traceback.print_exc()
             return e
 
 
