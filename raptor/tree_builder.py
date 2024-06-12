@@ -244,6 +244,7 @@ class TreeBuilder:
         Returns:
             Dict[int, Node]: A dictionary mapping node indices to the corresponding leaf nodes.
         """
+        logging.info('inside multithreaded_create_leaf_nodes')
         with ThreadPoolExecutor() as executor:
             future_nodes = {
                 executor.submit(self.create_node, index, text): (index, text)
@@ -254,6 +255,8 @@ class TreeBuilder:
             for future in as_completed(future_nodes):
                 index, node = future.result()
                 leaf_nodes[index] = node
+
+        logging.info(f'outside multithreaded_create_leaf_nodes, with leaf_nodes in {leaf_nodes}')
 
         return leaf_nodes
 
@@ -280,7 +283,7 @@ class TreeBuilder:
             for index, text in enumerate(chunks):
                 __, node = self.create_node(index, text)
                 leaf_nodes[index] = node
-
+        logging.info('kzaporoj done creating leafs')
         layer_to_nodes = {0: list(leaf_nodes.values())}
 
         logging.info(f"Created {len(leaf_nodes)} Leaf Embeddings")
