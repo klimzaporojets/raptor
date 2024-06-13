@@ -60,7 +60,7 @@ class LocalPhi3Model(BaseQAModel):
             inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
 
             # TODO: implement stopping_criteria
-            outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
+            outputs = self.client.generate(inputs, max_new_tokens=max_tokens,
                                           temperature=0,
                                           top_p=1,
                                           repetition_penalty=1.0,
