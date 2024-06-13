@@ -35,7 +35,7 @@ class LocalPhi3Model(BaseQAModel):
                                                            torch_dtype='auto',
                                                            trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
-
+        self.tokenizer.to(device_map)
         # self.client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
