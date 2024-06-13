@@ -59,7 +59,7 @@ class LocalPhi3Model(BaseQAModel):
 
             inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
             inputs = inputs.to(self.device_map)
-            print('deviceofinputs1: ', inputs.device, ' and self.device_map is ', self.device_map)
+            # print('deviceofinputs1: ', inputs.device, ' and self.device_map is ', self.device_map)
 
             # TODO: implement stopping_criteria
             outputs = self.client.generate(inputs, max_new_tokens=max_tokens,
@@ -70,9 +70,11 @@ class LocalPhi3Model(BaseQAModel):
                                           )
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
-            print('------answer question------')
-            print('\tcontext: ', context, '\n\tquestion: ', question, '\n\tanswer: ', text)
-            print('---------------------------')
+            # print('------answer question------')
+            # print('\tcontext: ', context, '\n\tquestion: ', question, '\n\tanswer: ', text)
+            # print('---------------------------')
+            text = text[text.rindex('<|assistant|>')+len('<|assistant|>'):
+                        text.rindex('<|end|>')]
             return text
         except Exception as e:
             print(e)

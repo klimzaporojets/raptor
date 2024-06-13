@@ -111,7 +111,7 @@ class Phi3SummarizationModel(BaseSummarizationModel):
             inputs = inputs.to(self.device_map)
             # import pdb
             # pdb.set_trace()
-            print('deviceofinputs 2: ', inputs.device, ' and self.device_map is ', self.device_map)
+            # print('deviceofinputs 2: ', inputs.device, ' and self.device_map is ', self.device_map)
             # TODO: implement stopping_criteria
             outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
                                           temperature=0,
@@ -123,11 +123,11 @@ class Phi3SummarizationModel(BaseSummarizationModel):
             # pdb.set_trace()
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
-            print('------------summary--------------')
-            print('\tcontext: ', context, '\n\tsummary: ', text)
+            # print('------------summary--------------')
+            # print('\tcontext: ', context, '\n\tsummary: ', text)
             text = text[text.index(':<|end|><|assistant|>') + len(':<|end|><|assistant|>'):].strip()
-            print('summary trimmed: ', text)
-            print('---------------------------')
+            # print('summary trimmed: ', text)
+            # print('---------------------------')
 
             return text
         except Exception as e:
