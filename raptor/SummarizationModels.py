@@ -107,6 +107,8 @@ class Phi3SummarizationModel(BaseSummarizationModel):
             inputs = (self.tokenizer
                       .apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt"))
             # inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=False, return_tensors="pt")
+            import pdb
+            pdb.set_trace()
 
             # TODO: implement stopping_criteria
             outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
@@ -115,6 +117,8 @@ class Phi3SummarizationModel(BaseSummarizationModel):
                                           repetition_penalty=1.0,
                                           diversity_penalty=0.0,
                                           )
+
+            pdb.set_trace()
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
             print('------------summary--------------')
