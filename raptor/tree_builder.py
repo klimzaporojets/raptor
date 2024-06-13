@@ -261,7 +261,10 @@ class TreeBuilder:
 
         return leaf_nodes
 
-    def build_from_text(self, text: str, use_multithreading: bool = True) -> Tree:
+    # TODO: kzaporoj: have set use_multithreading to False for better debugging, return it back to True
+    #   for real run
+    # def build_from_text(self, text: str, use_multithreading: bool = True) -> Tree:
+    def build_from_text(self, text: str, use_multithreading: bool = False) -> Tree:
         """Builds a golden tree from the input text, optionally using multithreading.
 
         Args:
