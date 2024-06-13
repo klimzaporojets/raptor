@@ -30,7 +30,7 @@ RA.add_documents(text)
 
 question = "How did Cinderella reach her happy ending?"
 answer = RA.answer_question(question=question)
-print("+++++Answer from the tree just created: ", answer)
+print(f"+++++Answer to the question {question} from the tree just created: ", answer)
 
 SAVE_PATH = "demo/cinderella_klim"
 RA.save(SAVE_PATH)
@@ -41,4 +41,4 @@ RA = RetrievalAugmentation(config=retrievalAugmentationConfig,
                            tree=SAVE_PATH)
 answer = RA.answer_question(question=question)
 
-print("+++++Answer from the tree just loaded tree: ", answer)
+print(f"+++++Answer to the question {question} from the tree just loaded tree: ", answer)
