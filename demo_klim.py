@@ -15,6 +15,9 @@ from raptor import LocalPhi3Model
 
 # p_qa_model = LocalPhi3Model()
 # p_embedding_model = SBertEmbeddingModel()
+
+print('+++++initializing RetrievalAugmentation')
+
 retrievalAugmentationConfig = RetrievalAugmentationConfig(
     embedding_model=SBertEmbeddingModel(),
     qa_model=LocalPhi3Model(),
@@ -22,13 +25,19 @@ retrievalAugmentationConfig = RetrievalAugmentationConfig(
 RA = RetrievalAugmentation(retrievalAugmentationConfig)
 
 # construct the tree
+print('+++++constructing the tree')
 RA.add_documents(text)
 
 question = "How did Cinderella reach her happy ending?"
 answer = RA.answer_question(question=question)
-print("Answer: ", answer)
+print("+++++Answer from the tree just created: ", answer)
 
+SAVE_PATH = "demo/cinderella_klim"
+RA.save(SAVE_PATH)
 
-# SBertEmbeddingModel()
-#
-# LocalPhi3Model()
+print("+++++Just saved the tree to: ", SAVE_PATH)
+
+RA = RetrievalAugmentation(tree=SAVE_PATH)
+answer = RA.answer_question(question=question)
+
+print("+++++Answer from the tree just loaded tree: ", answer)
