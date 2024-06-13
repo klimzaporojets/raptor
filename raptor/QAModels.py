@@ -28,10 +28,10 @@ class LocalPhi3Model(BaseQAModel):
             model (str, optional): The GPT-3 model version to use for generating summaries. Defaults to "text-davinci-003".
         """
         self.model = model
-        device_map = 'cuda:2' if torch.cuda.is_available() else 'cpu'
+        self.device_map = 'cuda:2' if torch.cuda.is_available() else 'cpu'
 
         self.client = AutoModelForCausalLM.from_pretrained(model,
-                                                           device_map=device_map,
+                                                           device_map=self.device_map,
                                                            torch_dtype='auto',
                                                            trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
@@ -58,6 +58,7 @@ class LocalPhi3Model(BaseQAModel):
                             f"than 5-7 words, if possible: {question}"}]
 
             inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
+            inputs.to(self.device_map)
 
             # TODO: implement stopping_criteria
             outputs = self.client.generate(inputs, max_new_tokens=max_tokens,

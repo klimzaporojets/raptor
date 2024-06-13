@@ -82,10 +82,10 @@ class GPT3SummarizationModel(BaseSummarizationModel):
 class Phi3SummarizationModel(BaseSummarizationModel):
     def __init__(self, model='microsoft/Phi-3-mini-4k-instruct',
                  tokenizer='microsoft/Phi-3-mini-4k-instruct'):
-        device_map = 'cuda:3' if torch.cuda.is_available() else 'cpu'
+        self.device_map = 'cuda:3' if torch.cuda.is_available() else 'cpu'
 
         self.model = AutoModelForCausalLM.from_pretrained(model,
-                                                          device_map=device_map,
+                                                          device_map=self.device_map,
                                                           torch_dtype='auto',
                                                           trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
@@ -107,9 +107,9 @@ class Phi3SummarizationModel(BaseSummarizationModel):
             inputs = (self.tokenizer
                       .apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt"))
             # inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=False, return_tensors="pt")
-            import pdb
-            pdb.set_trace()
-
+            # import pdb
+            # pdb.set_trace()
+            inputs.to(self.device_map)
             # TODO: implement stopping_criteria
             outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
                                           temperature=0,
@@ -118,7 +118,7 @@ class Phi3SummarizationModel(BaseSummarizationModel):
                                           diversity_penalty=0.0,
                                           )
 
-            pdb.set_trace()
+            # pdb.set_trace()
 
             text = self.tokenizer.batch_decode(outputs)[0].strip()
             print('------------summary--------------')
