@@ -89,7 +89,7 @@ class Phi3SummarizationModel(BaseSummarizationModel):
                                                           torch_dtype='auto',
                                                           trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
-        self.tokenizer.to(device_map)
+        # self.tokenizer.to(device_map)
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
     def summarize(self, context, max_tokens=500, stop_sequence=None):
