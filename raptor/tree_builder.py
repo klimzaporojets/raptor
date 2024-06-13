@@ -171,11 +171,12 @@ class TreeBuilder:
         """
         if children_indices is None:
             children_indices = set()
-
+        print('kzaporoj: about to start creating embeddings: model.create_embedding(text)')
         embeddings = {
             model_name: model.create_embedding(text)
             for model_name, model in self.embedding_models.items()
         }
+        print('kzaporoj: just after embeddings were created model.create_embedding(text)')
         return (index, Node(text, index, children_indices, embeddings))
 
     def create_embedding(self, text) -> List[float]:
