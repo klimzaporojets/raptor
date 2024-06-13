@@ -37,7 +37,8 @@ RA.save(SAVE_PATH)
 
 print("+++++Just saved the tree to: ", SAVE_PATH)
 
-RA = RetrievalAugmentation(tree=SAVE_PATH)
+RA = RetrievalAugmentation(config=retrievalAugmentationConfig,
+                           tree=SAVE_PATH)
 answer = RA.answer_question(question=question)
 
 print("+++++Answer from the tree just loaded tree: ", answer)
