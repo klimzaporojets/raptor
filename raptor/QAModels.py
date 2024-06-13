@@ -59,7 +59,7 @@ class LocalPhi3Model(BaseQAModel):
 
             inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
             inputs.to(self.device_map)
-            print('deviceofinputs1: ', inputs.device)
+            print('deviceofinputs1: ', inputs.device, ' and self.device_map is ', self.device_map)
 
             # TODO: implement stopping_criteria
             outputs = self.client.generate(inputs, max_new_tokens=max_tokens,

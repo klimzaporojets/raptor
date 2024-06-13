@@ -110,7 +110,7 @@ class Phi3SummarizationModel(BaseSummarizationModel):
             # import pdb
             # pdb.set_trace()
             inputs.to(self.device_map)
-            print('deviceofinputs 2: ', inputs.device)
+            print('deviceofinputs 2: ', inputs.device, ' and self.device_map is ', self.device_map)
             # TODO: implement stopping_criteria
             outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
                                           temperature=0,
