@@ -58,7 +58,7 @@ class LocalPhi3Model(BaseQAModel):
                             f"than 5-7 words, if possible: {question}"}]
 
             inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt")
-            inputs.to(self.device_map)
+            inputs = inputs.to(self.device_map)
             print('deviceofinputs1: ', inputs.device, ' and self.device_map is ', self.device_map)
 
             # TODO: implement stopping_criteria

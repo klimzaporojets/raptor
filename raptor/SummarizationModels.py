@@ -108,9 +108,9 @@ class Phi3SummarizationModel(BaseSummarizationModel):
                       .apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt"))
             # inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=False, return_tensors="pt")
 
-            inputs.to(self.device_map)
-            import pdb
-            pdb.set_trace()
+            inputs = inputs.to(self.device_map)
+            # import pdb
+            # pdb.set_trace()
             print('deviceofinputs 2: ', inputs.device, ' and self.device_map is ', self.device_map)
             # TODO: implement stopping_criteria
             outputs = self.model.generate(inputs, max_new_tokens=max_tokens,
