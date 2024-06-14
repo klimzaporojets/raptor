@@ -26,12 +26,12 @@ def global_cluster_embeddings(
     n_neighbors: Optional[int] = None,
     metric: str = "cosine",
 ) -> np.ndarray:
-    if n_neighbors is None: # n_neighbors -->
-        n_neighbors = int((len(embeddings) - 1) ** 0.5)
+    if n_neighbors is None: # n_neighbors --> None; len(embeddings) --> 35; dim --> 10
+        n_neighbors = int((len(embeddings) - 1) ** 0.5) # n_neighbors --> 5
     reduced_embeddings = umap.UMAP(
         n_neighbors=n_neighbors, n_components=dim, metric=metric
-    ).fit_transform(embeddings) # embeddings -->
-    return reduced_embeddings # reduced_embeddings -->
+    ).fit_transform(embeddings) # embeddings.shape --> (35, 768)
+    return reduced_embeddings # reduced_embeddings.shape --> (35,10)
 
 
 def local_cluster_embeddings(
@@ -46,15 +46,15 @@ def local_cluster_embeddings(
 def get_optimal_clusters(
     embeddings: np.ndarray, max_clusters: int = 50, random_state: int = RANDOM_SEED
 ) -> int:
-    max_clusters = min(max_clusters, len(embeddings)) # embeddings.shape --> ; len(embeddings) --> ; max_clusters:
-    n_clusters = np.arange(1, max_clusters) # n_clusters -->
+    max_clusters = min(max_clusters, len(embeddings)) # embeddings.shape --> (35,10) ; len(embeddings) --> 35; max_clusters: 35
+    n_clusters = np.arange(1, max_clusters) # n_clusters --> array([ 1,  2,  3,  4,  ..., 34])
     bics = []
     for n in n_clusters:
         gm = GaussianMixture(n_components=n, random_state=random_state)
         gm.fit(embeddings)
-        bics.append(gm.bic(embeddings))
+        bics.append(gm.bic(embeddings)) # Bayesian information criterion for the current model on the input X.
     optimal_clusters = n_clusters[np.argmin(bics)]
-    return optimal_clusters
+    return optimal_clusters # optimal_clusters --> 7
 
 
 def GMM_cluster(embeddings: np.ndarray, threshold: float, random_state: int = 0):
