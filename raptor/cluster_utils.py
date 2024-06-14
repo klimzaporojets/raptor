@@ -46,8 +46,8 @@ def local_cluster_embeddings(
 def get_optimal_clusters(
     embeddings: np.ndarray, max_clusters: int = 50, random_state: int = RANDOM_SEED
 ) -> int:
-    max_clusters = min(max_clusters, len(embeddings))
-    n_clusters = np.arange(1, max_clusters)
+    max_clusters = min(max_clusters, len(embeddings)) # embeddings.shape --> ; len(embeddings) --> ; max_clusters:
+    n_clusters = np.arange(1, max_clusters) # n_clusters -->
     bics = []
     for n in n_clusters:
         gm = GaussianMixture(n_components=n, random_state=random_state)
