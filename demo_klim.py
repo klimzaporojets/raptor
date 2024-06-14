@@ -22,6 +22,7 @@ retrievalAugmentationConfig = RetrievalAugmentationConfig(
     embedding_model=SBertEmbeddingModel(),
     qa_model=LocalPhi3Model(),
     summarization_model=Phi3SummarizationModel())
+
 RA = RetrievalAugmentation(retrievalAugmentationConfig)
 
 # construct the tree

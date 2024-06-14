@@ -287,6 +287,10 @@ class TreeBuilder:
             for index, text in enumerate(chunks):
                 __, node = self.create_node(index, text)
                 leaf_nodes[index] = node
+
+        import pdb
+        pdb.set_trace()
+
         logging.info('kzaporoj done creating leafs')
         layer_to_nodes = {0: list(leaf_nodes.values())}
 
