@@ -26,12 +26,12 @@ def global_cluster_embeddings(
     n_neighbors: Optional[int] = None,
     metric: str = "cosine",
 ) -> np.ndarray:
-    if n_neighbors is None:
+    if n_neighbors is None: # n_neighbors -->
         n_neighbors = int((len(embeddings) - 1) ** 0.5)
     reduced_embeddings = umap.UMAP(
         n_neighbors=n_neighbors, n_components=dim, metric=metric
-    ).fit_transform(embeddings)
-    return reduced_embeddings
+    ).fit_transform(embeddings) # embeddings -->
+    return reduced_embeddings # reduced_embeddings -->
 
 
 def local_cluster_embeddings(
