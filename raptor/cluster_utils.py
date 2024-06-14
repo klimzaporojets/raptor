@@ -58,7 +58,7 @@ def get_optimal_clusters(
 
 
 def GMM_cluster(embeddings: np.ndarray, threshold: float, random_state: int = 0):
-    n_clusters = get_optimal_clusters(embeddings)
+    n_clusters = get_optimal_clusters(embeddings) # threshold --> 0.1
     gm = GaussianMixture(n_components=n_clusters, random_state=random_state)
     gm.fit(embeddings)
     probs = gm.predict_proba(embeddings)
@@ -182,4 +182,4 @@ class RAPTOR_Clustering(ClusteringAlgorithm):
             else:
                 node_clusters.append(cluster_nodes)
 
-        return node_clusters
+        return node_clusters # --> list of lists of raptor.tree_structures.Node

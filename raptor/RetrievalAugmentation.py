@@ -251,7 +251,7 @@ class RetrievalAugmentation:
                 "The TreeRetriever instance has not been initialized. Call 'add_documents' first."
             )
 
-        return self.retriever.retrieve(
+        return self.retriever.retrieve( # self.retriever --> TreeRetriever
             question,
             start_layer,
             num_layers,
@@ -291,7 +291,7 @@ class RetrievalAugmentation:
         context, layer_information = self.retrieve(
             question, start_layer, num_layers, top_k, max_tokens, collapse_tree, True
         )
-
+        # self.qa_model --> <raptor.QAModels.LocalPhi3Model>
         answer = self.qa_model.answer_question(context, question)
 
         if return_layer_information:

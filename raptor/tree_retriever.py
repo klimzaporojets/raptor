@@ -18,15 +18,15 @@ logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
 class TreeRetrieverConfig:
     def __init__(
-        self,
-        tokenizer=None,
-        threshold=None,
-        top_k=None,
-        selection_mode=None,
-        context_embedding_model=None,
-        embedding_model=None,
-        num_layers=None,
-        start_layer=None,
+            self,
+            tokenizer=None,
+            threshold=None,
+            top_k=None,
+            selection_mode=None,
+            context_embedding_model=None,
+            embedding_model=None,
+            num_layers=None,
+            start_layer=None,
     ):
         if tokenizer is None:
             tokenizer = tiktoken.get_encoding("cl100k_base")
@@ -130,12 +130,12 @@ class TreeRetriever(BaseRetriever):
         if self.num_layers > self.start_layer + 1:
             raise ValueError("num_layers must be less than or equal to start_layer + 1")
 
-        self.tokenizer = config.tokenizer
-        self.top_k = config.top_k
-        self.threshold = config.threshold
-        self.selection_mode = config.selection_mode
-        self.embedding_model = config.embedding_model
-        self.context_embedding_model = config.context_embedding_model
+        self.tokenizer = config.tokenizer  # --> tiktoken.core.Encoding : <Encoding 'cl100k_base'>
+        self.top_k = config.top_k  # top_k --> 5
+        self.threshold = config.threshold  # self.threshold --> 0.5
+        self.selection_mode = config.selection_mode  # "top_k"
+        self.embedding_model = config.embedding_model  # raptor.EmbeddingModels.SBertEmbeddingModel
+        self.context_embedding_model = config.context_embedding_model  # "EMB"
 
         self.tree_node_index_to_layer = reverse_mapping(self.tree.layer_to_nodes)
 
@@ -195,7 +195,7 @@ class TreeRetriever(BaseRetriever):
         return selected_nodes, context
 
     def retrieve_information(
-        self, current_nodes: List[Node], query: str, num_layers: int
+            self, current_nodes: List[Node], query: str, num_layers: int
     ) -> str:
         """
         Retrieves the most relevant information from the tree based on the query.
@@ -250,14 +250,14 @@ class TreeRetriever(BaseRetriever):
         return selected_nodes, context
 
     def retrieve(
-        self,
-        query: str,
-        start_layer: int = None,
-        num_layers: int = None,
-        top_k: int = 10, 
-        max_tokens: int = 3500,
-        collapse_tree: bool = True,
-        return_layer_information: bool = False,
+            self,
+            query: str,
+            start_layer: int = None,
+            num_layers: int = None,
+            top_k: int = 10,
+            max_tokens: int = 3500,
+            collapse_tree: bool = True,
+            return_layer_information: bool = False,
     ) -> str:
         """
         Queries the tree and returns the most relevant information.
@@ -287,7 +287,7 @@ class TreeRetriever(BaseRetriever):
         num_layers = self.num_layers if num_layers is None else num_layers
 
         if not isinstance(start_layer, int) or not (
-            0 <= start_layer <= self.tree.num_layers
+                0 <= start_layer <= self.tree.num_layers
         ):
             raise ValueError(
                 "start_layer must be an integer between 0 and tree.num_layers"
