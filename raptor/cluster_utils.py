@@ -1,5 +1,6 @@
 import logging
 import random
+import time
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
@@ -21,21 +22,24 @@ random.seed(RANDOM_SEED)
 
 
 def global_cluster_embeddings(
-    embeddings: np.ndarray,
-    dim: int,
-    n_neighbors: Optional[int] = None,
-    metric: str = "cosine",
+        embeddings: np.ndarray,
+        dim: int,
+        n_neighbors: Optional[int] = None,
+        metric: str = "cosine",
 ) -> np.ndarray:
-    if n_neighbors is None: # n_neighbors --> None; len(embeddings) --> 35; dim --> 10
-        n_neighbors = int((len(embeddings) - 1) ** 0.5) # n_neighbors --> 5
+    if n_neighbors is None:  # n_neighbors --> None; len(embeddings) --> 35; dim --> 10
+        n_neighbors = int((len(embeddings) - 1) ** 0.5)  # n_neighbors --> 5
+    start_time = time.time()
     reduced_embeddings = umap.UMAP(
         n_neighbors=n_neighbors, n_components=dim, metric=metric
-    ).fit_transform(embeddings) # embeddings.shape --> (35, 768)
-    return reduced_embeddings # reduced_embeddings.shape --> (35,10)
+    ).fit_transform(embeddings)  # embeddings.shape --> (35, 768)
+    curr_time = time.time()
+    print(f'it took {(curr_time - start_time)} seconds to reduce dimensionality')
+    return reduced_embeddings  # reduced_embeddings.shape --> (35,10)
 
 
 def local_cluster_embeddings(
-    embeddings: np.ndarray, dim: int, num_neighbors: int = 10, metric: str = "cosine"
+        embeddings: np.ndarray, dim: int, num_neighbors: int = 10, metric: str = "cosine"
 ) -> np.ndarray:
     reduced_embeddings = umap.UMAP(
         n_neighbors=num_neighbors, n_components=dim, metric=metric
@@ -44,21 +48,22 @@ def local_cluster_embeddings(
 
 
 def get_optimal_clusters(
-    embeddings: np.ndarray, max_clusters: int = 50, random_state: int = RANDOM_SEED
+        embeddings: np.ndarray, max_clusters: int = 50, random_state: int = RANDOM_SEED
 ) -> int:
-    max_clusters = min(max_clusters, len(embeddings)) # embeddings.shape --> (35,10) ; len(embeddings) --> 35; max_clusters: 35
-    n_clusters = np.arange(1, max_clusters) # n_clusters --> array([ 1,  2,  3,  4,  ..., 34])
+    max_clusters = min(max_clusters,
+                       len(embeddings))  # embeddings.shape --> (35,10) ; len(embeddings) --> 35; max_clusters: 35
+    n_clusters = np.arange(1, max_clusters)  # n_clusters --> array([ 1,  2,  3,  4,  ..., 34])
     bics = []
     for n in n_clusters:
         gm = GaussianMixture(n_components=n, random_state=random_state)
         gm.fit(embeddings)
-        bics.append(gm.bic(embeddings)) # Bayesian information criterion for the current model on the input X.
+        bics.append(gm.bic(embeddings))  # Bayesian information criterion for the current model on the input X.
     optimal_clusters = n_clusters[np.argmin(bics)]
-    return optimal_clusters # optimal_clusters --> 7
+    return optimal_clusters  # optimal_clusters --> 7
 
 
 def GMM_cluster(embeddings: np.ndarray, threshold: float, random_state: int = 0):
-    n_clusters = get_optimal_clusters(embeddings) # threshold --> 0.1
+    n_clusters = get_optimal_clusters(embeddings)  # threshold --> 0.1
     gm = GaussianMixture(n_components=n_clusters, random_state=random_state)
     gm.fit(embeddings)
     probs = gm.predict_proba(embeddings)
@@ -67,9 +72,9 @@ def GMM_cluster(embeddings: np.ndarray, threshold: float, random_state: int = 0)
 
 
 def perform_clustering(
-    embeddings: np.ndarray, dim: int, threshold: float, verbose: bool = False
+        embeddings: np.ndarray, dim: int, threshold: float, verbose: bool = False
 ) -> List[np.ndarray]:
-    reduced_embeddings_global = global_cluster_embeddings(embeddings, min(dim, len(embeddings) -2))
+    reduced_embeddings_global = global_cluster_embeddings(embeddings, min(dim, len(embeddings) - 2))
     global_clusters, n_global_clusters = GMM_cluster(
         reduced_embeddings_global, threshold
     )
@@ -131,13 +136,13 @@ class ClusteringAlgorithm(ABC):
 
 class RAPTOR_Clustering(ClusteringAlgorithm):
     def perform_clustering(
-        nodes: List[Node],
-        embedding_model_name: str,
-        max_length_in_cluster: int = 3500,
-        tokenizer=tiktoken.get_encoding("cl100k_base"),
-        reduction_dimension: int = 10,
-        threshold: float = 0.1,
-        verbose: bool = False,
+            nodes: List[Node],
+            embedding_model_name: str,
+            max_length_in_cluster: int = 3500,
+            tokenizer=tiktoken.get_encoding("cl100k_base"),
+            reduction_dimension: int = 10,
+            threshold: float = 0.1,
+            verbose: bool = False,
     ) -> List[List[Node]]:
         # Get the embeddings from the nodes
         embeddings = np.array([node.embeddings[embedding_model_name] for node in nodes])
@@ -182,4 +187,4 @@ class RAPTOR_Clustering(ClusteringAlgorithm):
             else:
                 node_clusters.append(cluster_nodes)
 
-        return node_clusters # --> list of lists of raptor.tree_structures.Node
+        return node_clusters  # --> list of lists of raptor.tree_structures.Node
