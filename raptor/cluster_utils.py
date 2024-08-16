@@ -63,7 +63,7 @@ def get_optimal_clusters(
 
 
 def GMM_cluster(embeddings: np.ndarray, threshold: float, random_state: int = 0):
-    n_clusters = get_optimal_clusters(embeddings)  # threshold --> 0.1
+    n_clusters = get_optimal_clusters(embeddings)  # threshold --> 0.1; embeddings.shape --> (35, 10)
     gm = GaussianMixture(n_components=n_clusters, random_state=random_state)
     gm.fit(embeddings)
     probs = gm.predict_proba(embeddings)
